@@ -258,24 +258,31 @@ function protectTerms(text, d){
     const srcTerm = d==='en2ko'?en:ko, dstTerm = d==='en2ko'?ko:en;
     if(!srcTerm) return;
     const re=new RegExp(escapeReg(srcTerm), 'gi');
-    masked=masked.replace(re, ()=>{ const tk='@@'+map.length+'@@'; map.push(dstTerm); return tk; });
+    masked=masked.replace(re, ()=>{ const tk='XQZ'+map.length; map.push(dstTerm); return tk; });
   });
   return {masked,map};
 }
 function restoreTerms(text, map){
-  // 번역기가 "@ @ 0 @ @" 처럼 공백을 넣어도 복원
-  return text.replace(/@[@\s]*(\d+)[@\s]*@/g,(m,n)=> map[+n]!==undefined? map[+n] : m);
+  // 번역기가 대소문자/공백을 바꿔도 복원 (XQZ0, xqz 0 등)
+  return text.replace(/XQZ\s*(\d+)/gi,(m,n)=> map[+n]!==undefined? map[+n] : m);
 }
 
 /* ===================== 번역 엔진 ===================== */
+function withTimeout(p,ms){ return Promise.race([p, new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),ms))]); }
 async function getBuiltinTranslator(src,dst){
   const key=src+'|'+dst;
   if(translator[key]) return translator[key];
   if(!('Translator' in self)) return null;
   try{
-    const avail=await Translator.availability({sourceLanguage:src,targetLanguage:dst});
-    if(avail==='unavailable') return null;
-    const t=await Translator.create({sourceLanguage:src,targetLanguage:dst});
+    const avail=await withTimeout(Translator.availability({sourceLanguage:src,targetLanguage:dst}),3000);
+    // 'available'일 때만 즉시 사용. 'downloadable/downloading'이면 멈추지 않도록 온라인 사용하고 백그라운드로 준비.
+    if(avail!=='available'){
+      if(avail==='downloadable'||avail==='downloading'){
+        Translator.create({sourceLanguage:src,targetLanguage:dst}).then(t=>{ translator[key]=async x=>(await t.translate(x)); }).catch(()=>{});
+      }
+      return null;
+    }
+    const t=await withTimeout(Translator.create({sourceLanguage:src,targetLanguage:dst}),4000);
     const fn=async txt=>(await t.translate(txt));
     translator[key]=fn; return fn;
   }catch(e){ return null; }
@@ -288,7 +295,7 @@ async function myMemory(txt,src,dst){
 async function mtTranslate(text,d){
   const {src,dst}=LANGS[d];
   const bi=await getBuiltinTranslator(src,dst);
-  if(bi){ try{ return await bi(text); }catch(e){} }
+  if(bi){ try{ return await withTimeout(bi(text),6000); }catch(e){} }
   return await myMemory(text,src,dst);
 }
 async function translate(text,d){
