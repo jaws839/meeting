@@ -44,17 +44,16 @@
   }
   header{
     background:var(--panel); border-bottom:1px solid var(--line);
-    padding:8px 12px calc(8px); display:flex; flex-wrap:wrap; gap:8px 12px;
-    align-items:center; box-shadow:var(--shadow); z-index:5;
-    padding-top:max(8px,env(safe-area-inset-top));
+    padding:8px 12px; display:flex; flex-wrap:wrap; gap:8px 12px; align-items:center;
+    box-shadow:var(--shadow); z-index:5; padding-top:max(8px,env(safe-area-inset-top));
   }
-  .brand{font-weight:700; font-size:15px; display:flex; align-items:center; gap:8px; margin-right:auto}
+  .brand{font-weight:700; font-size:15px; display:flex; align-items:center; gap:8px; width:100%}
   .brand .dot{width:11px;height:11px;border-radius:50%;background:var(--muted);transition:.2s;flex:none}
   body.rec .brand .dot{background:var(--rec); box-shadow:0 0 0 0 rgba(220,38,38,.6); animation:pulse 1.4s infinite}
   @keyframes pulse{70%{box-shadow:0 0 0 9px rgba(220,38,38,0)}100%{box-shadow:0 0 0 0 rgba(220,38,38,0)}}
 
-  .seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--bg)}
-  .seg button{border:0;background:transparent;color:var(--muted);padding:9px 12px;font-size:13px;cursor:pointer;font-weight:600}
+  .seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--bg);flex:1}
+  .seg button{border:0;background:transparent;color:var(--muted);padding:9px 8px;font-size:13px;cursor:pointer;font-weight:600;flex:1}
   .seg button.on{background:var(--accent);color:var(--accent-ink)}
 
   details.info{width:100%;border:1px solid var(--line);border-radius:10px;background:var(--bg);padding:2px 10px}
@@ -62,9 +61,11 @@
   details.info summary::-webkit-details-marker{display:none}
   details.info summary::before{content:"▸ ";color:var(--accent)}
   details.info[open] summary::before{content:"▾ "}
-  .info-row{display:flex;flex-wrap:wrap;gap:8px;padding:4px 0 10px}
+  .info-row{display:flex;flex-wrap:wrap;gap:8px;padding:4px 0 10px;align-items:center}
   label.field{font-size:11px;color:var(--muted);display:flex;flex-direction:column;gap:3px;flex:1;min-width:140px}
+  label.chk{font-size:12px;color:var(--ink);display:flex;align-items:center;gap:6px;cursor:pointer}
   input[type=text]{background:var(--panel);border:1px solid var(--line);border-radius:8px;color:var(--ink);padding:9px 10px;font-size:14px;width:100%}
+  input[type=checkbox]{width:18px;height:18px;accent-color:var(--accent)}
 
   .btn{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:10px;padding:10px 13px;font-size:13px;font-weight:600;cursor:pointer;display:inline-flex;gap:6px;align-items:center;min-height:42px}
   .btn:active{transform:scale(.97)}
@@ -73,9 +74,9 @@
   .btn:disabled{opacity:.4;cursor:not-allowed}
   .toolbar{background:var(--panel);border-bottom:1px solid var(--line);padding:8px 12px;display:flex;flex-wrap:wrap;gap:7px;align-items:center}
   .big{flex:1;min-width:150px;font-size:15px;justify-content:center;min-height:50px}
-  .spacer{flex:1}
-  .engine{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:5px;width:100%;order:9}
-  .engine b{color:var(--ink)}
+  .status{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:8px;width:100%;order:9;flex-wrap:wrap}
+  .status b{color:var(--ink)}
+  .status .rtime{color:var(--rec);font-weight:700}
 
   main{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 12px 120px;scroll-behavior:smooth}
   .log{max-width:900px;margin:0 auto;display:flex;flex-direction:column;gap:9px}
@@ -104,11 +105,17 @@
   .banner{max-width:900px;margin:0 auto 10px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;padding:10px 13px;border-radius:10px;font-size:13px;line-height:1.5}
   @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .banner{background:#2a1c0e;border-color:#5a3a16;color:#fcd9a8}}
 
-  /* 모바일 최적화 */
+  /* modal */
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:50;padding:16px}
+  .modal.open{display:flex}
+  .sheet{background:var(--panel);border:1px solid var(--line);border-radius:16px;max-width:560px;width:100%;max-height:85vh;display:flex;flex-direction:column;box-shadow:0 20px 50px rgba(0,0,0,.3)}
+  .sheet h3{margin:0;padding:16px;border-bottom:1px solid var(--line);font-size:16px}
+  .sheet .body{padding:14px 16px;overflow:auto}
+  .sheet textarea{width:100%;height:240px;background:var(--bg);border:1px solid var(--line);border-radius:10px;color:var(--ink);padding:10px;font-size:13px;font-family:ui-monospace,Consolas,monospace;line-height:1.6}
+  .sheet .foot{padding:12px 16px;border-top:1px solid var(--line);display:flex;gap:8px;justify-content:flex-end}
+  .note{font-size:12px;color:var(--muted);line-height:1.6;margin:0 0 10px}
+
   @media (max-width:620px){
-    .brand{width:100%;margin-right:0}
-    .seg{flex:1}
-    .seg button{flex:1;text-align:center;padding:10px 6px}
     .toolbar .btn:not(.big){flex:1;justify-content:center;font-size:12px;padding:9px 8px}
   }
 </style>
@@ -119,16 +126,21 @@
     <button class="btn" id="themeBtn" title="테마" style="margin-left:auto;min-height:34px;padding:6px 10px">🌓</button>
   </div>
 
-  <div class="seg" id="dirSeg" style="flex:1">
-    <button data-dir="en2ko" class="on">상대 영어 → 한국어</button>
-    <button data-dir="ko2en">내 한국어 → EN</button>
+  <div class="seg" id="dirSeg">
+    <button data-mode="auto" class="on">🔀 자동</button>
+    <button data-mode="en2ko">상대 영어→한</button>
+    <button data-mode="ko2en">내 한국어→EN</button>
   </div>
 
   <details class="info">
-    <summary>회의 정보 (제목 · 참석자)</summary>
+    <summary>회의 정보 · 옵션</summary>
     <div class="info-row">
       <label class="field">제목<input type="text" id="mTitle" placeholder="예: RATIONAL x ○○ 미팅"></label>
       <label class="field">참석자<input type="text" id="mAttendee" placeholder="홍길동, John Smith …"></label>
+    </div>
+    <div class="info-row">
+      <label class="chk"><input type="checkbox" id="optRec"> 🎙 원음 녹음(.webm) 동시 저장</label>
+      <button class="btn" id="glossBtn" style="min-height:36px">📖 전문용어 사전</button>
     </div>
   </details>
 </header>
@@ -136,14 +148,17 @@
 <div class="toolbar">
   <button class="btn primary big" id="startBtn">● 녹음·인식 시작</button>
   <button class="btn danger big" id="stopBtn" disabled>■ 정지</button>
-  <button class="btn" id="swapBtn" title="방향 전환">⇄ 전환</button>
   <button class="btn" id="fsDown" title="글자 작게">A−</button>
   <button class="btn" id="fsUp" title="글자 크게">A+</button>
   <button class="btn" id="copyBtn">📋 복사</button>
   <button class="btn" id="mdBtn">⬇ 회의록</button>
-  <button class="btn" id="aiBtn" title="정리용 프롬프트 + 기록 복사">✨ AI정리</button>
+  <button class="btn" id="aiBtn" title="정리용 프롬프트+기록 복사">✨ AI정리</button>
+  <button class="btn" id="audioBtn" title="원음 녹음파일 저장" disabled>🎧 녹음저장</button>
   <button class="btn" id="clearBtn">🗑</button>
-  <span class="engine">번역엔진: <b id="engName">확인 중…</b> · <span id="wakeState">화면유지 off</span></span>
+  <span class="status">
+    번역엔진 <b id="engName">확인 중…</b> · <span id="wakeState">화면유지 off</span> · 인식 <b id="recLangLbl">EN</b>
+    <span id="recDot" class="rtime" style="display:none">● REC <span id="recTime">0:00</span></span>
+  </span>
 </div>
 
 <main id="main">
@@ -152,12 +167,13 @@
       <h2>🎙 시작하기</h2>
       <ol>
         <li><b>Chrome</b>(안드로이드) / Chrome·Edge(PC)에서 <b>HTTPS 주소</b>로 여세요.</li>
-        <li>방향을 확인하고 <b>● 녹음·인식 시작</b> → 마이크 권한 <b>허용</b>.</li>
-        <li>상대 영어가 실시간으로 받아쓰기 + 한국어 번역됩니다.</li>
-        <li>내가 말할 땐 <kbd>⇄ 전환</kbd>으로 한국어→영어.</li>
-        <li>끝나면 <b>⬇ 회의록</b> 저장 또는 <b>✨ AI정리</b> 복사.</li>
+        <li>방향은 <b>🔀 자동</b> 권장(말의 언어를 감지해 방향 자동 설정).</li>
+        <li><b>● 녹음·인식 시작</b> → 마이크 <b>허용</b>.</li>
+        <li>끝나면 <b>⬇ 회의록</b> / <b>✨ AI정리</b> / <b>🎧 녹음저장</b>.</li>
       </ol>
-      <p style="font-size:13px">📱 <b>안드로이드 팁</b>: 반드시 HTTPS 주소여야 마이크가 켜집니다. 인터넷 연결 필요. 화면이 꺼지면 인식이 멈추니 ‘화면유지’가 켜진 상태를 확인하세요(상단 표시).</p>
+      <p style="font-size:13px">🔀 <b>자동</b>: 인식된 글이 한글이면 한→영, 영문이면 영→한으로 번역 방향을 자동 전환합니다.<br>
+      📖 <b>전문용어 사전</b>: iCombi Pro 등 제품명이 깨지지 않게 보호·교정합니다(직접 편집 가능).<br>
+      🎙 <b>원음 녹음</b>: 체크 시 회의 음성을 .webm으로 저장(일부 폰은 인식과 동시 사용이 제한될 수 있음).</p>
     </div>
   </div>
 </main>
@@ -166,17 +182,90 @@
   <div class="live-in" id="liveIn"><span class="hint">정지 상태입니다. ‘녹음·인식 시작’을 누르세요.</span></div>
 </div>
 
+<!-- 용어집 모달 -->
+<div class="modal" id="glossModal">
+  <div class="sheet">
+    <h3>📖 전문용어 사전 (번역 교정)</h3>
+    <div class="body">
+      <p class="note">한 줄에 하나씩 <b>영어=한국어</b> 형식으로 입력하세요. 번역 시 해당 용어를 보호 후 지정값으로 교정합니다.<br>
+      예) <code>iCombi Pro=iCombi Pro</code> (제품명은 그대로 유지) / <code>combi oven=콤비오븐</code></p>
+      <textarea id="glossText" spellcheck="false"></textarea>
+    </div>
+    <div class="foot">
+      <button class="btn" id="glossReset">기본값 복원</button>
+      <button class="btn" id="glossCancel">취소</button>
+      <button class="btn primary" id="glossSave">저장</button>
+    </div>
+  </div>
+</div>
+
 <script>
-/* ===================== 상태 ===================== */
+/* ===================== 설정 ===================== */
 const LANGS = {
-  en2ko: {src:'en', dst:'ko', rec:'en-US', whoSrc:'상대'},
-  ko2en: {src:'ko', dst:'en', rec:'ko-KR', whoSrc:'나'}
+  en2ko: {src:'en', dst:'ko', rec:'en-US', who:'상대'},
+  ko2en: {src:'ko', dst:'en', rec:'ko-KR', who:'나'}
 };
-let dir='en2ko', recog=null, listening=false, wantListen=false;
+const DEFAULT_GLOSSARY = [
+  'RATIONAL=RATIONAL',
+  'iCombi Pro=iCombi Pro',
+  'iCombi Classic=iCombi Classic',
+  'iCombi=iCombi',
+  'iVario Pro=iVario Pro',
+  'iVario=iVario',
+  'iHexagon=iHexagon',
+  'ConnectedCooking=ConnectedCooking',
+  'iProductionManager=iProductionManager',
+  'iCookingSuite=iCookingSuite',
+  'iKitchenControl=iKitchenControl',
+  'SelfCookingCenter=SelfCookingCenter',
+  'FinishingManager=FinishingManager',
+  'combi oven=콤비오븐',
+  'combi steamer=콤비스티머',
+  'service partner=서비스 파트너',
+  'quotation=견적',
+  'lead time=리드타임'
+];
+
+let mode='auto';                 // 'auto' | 'en2ko' | 'ko2en'
+let recog=null, listening=false, wantListen=false;
 let entries=[], translator={}, fsize=16, wakeLock=null;
+let autoRecLang='en-US', autoStreak={lang:null,n:0};
+let glossary=[];
+
+/* 오디오 녹음 */
+let mediaStream=null, mediaRec=null, audioChunks=[], lastAudioBlob=null, recStartTs=0, recTimer=null, audioMime='';
 
 const $=s=>document.querySelector(s);
 const main=$('#main'), logEl=$('#log'), liveIn=$('#liveIn');
+
+/* ===================== 용어집 ===================== */
+function loadGlossary(){
+  try{ const s=localStorage.getItem('glossary'); glossary = s? JSON.parse(s) : DEFAULT_GLOSSARY.slice(); }
+  catch(e){ glossary = DEFAULT_GLOSSARY.slice(); }
+}
+function saveGlossary(lines){ glossary=lines; try{localStorage.setItem('glossary',JSON.stringify(lines));}catch(e){} }
+function parsedGlossary(){
+  // [en, ko] 페어, 소스 긴 것 우선
+  const out=[];
+  glossary.forEach(l=>{ const i=l.indexOf('='); if(i>0){ const en=l.slice(0,i).trim(), ko=l.slice(i+1).trim(); if(en&&ko) out.push([en,ko]); } });
+  return out;
+}
+function escapeReg(s){ return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); }
+function protectTerms(text, d){
+  const pairs=parsedGlossary().slice().sort((a,b)=> (d==='en2ko'?b[0].length-a[0].length : b[1].length-a[1].length));
+  let masked=text; const map=[];
+  pairs.forEach(([en,ko])=>{
+    const srcTerm = d==='en2ko'?en:ko, dstTerm = d==='en2ko'?ko:en;
+    if(!srcTerm) return;
+    const re=new RegExp(escapeReg(srcTerm), 'gi');
+    masked=masked.replace(re, ()=>{ const tk='@@'+map.length+'@@'; map.push(dstTerm); return tk; });
+  });
+  return {masked,map};
+}
+function restoreTerms(text, map){
+  // 번역기가 "@ @ 0 @ @" 처럼 공백을 넣어도 복원
+  return text.replace(/@[@\s]*(\d+)[@\s]*@/g,(m,n)=> map[+n]!==undefined? map[+n] : m);
+}
 
 /* ===================== 번역 엔진 ===================== */
 async function getBuiltinTranslator(src,dst){
@@ -196,34 +285,99 @@ async function myMemory(txt,src,dst){
   const r=await fetch(url); const j=await r.json();
   return (j&&j.responseData&&j.responseData.translatedText)||'';
 }
-async function translate(txt){
-  const {src,dst}=LANGS[dir];
+async function mtTranslate(text,d){
+  const {src,dst}=LANGS[d];
   const bi=await getBuiltinTranslator(src,dst);
-  if(bi){ try{ return await bi(txt); }catch(e){} }
-  try{ return await myMemory(txt,src,dst); }catch(e){ return '(번역 실패 · 인터넷 확인)'; }
+  if(bi){ try{ return await bi(text); }catch(e){} }
+  return await myMemory(text,src,dst);
+}
+async function translate(text,d){
+  const {masked,map}=protectTerms(text,d);
+  let out;
+  try{ out=await mtTranslate(masked,d); }catch(e){ return '(번역 실패 · 인터넷 확인)'; }
+  return restoreTerms(out,map);
 }
 async function detectEngine(){
   const en=$('#engName');
   if('Translator' in self){
     const t=await getBuiltinTranslator('en','ko');
-    if(t){ en.textContent='브라우저 내장(오프라인)'; en.style.color='var(--ok)'; return; }
+    if(t){ en.textContent='브라우저 내장'; en.style.color='var(--ok)'; return; }
   }
   en.textContent='온라인(MyMemory)';
 }
 
-/* ===================== 화면 꺼짐 방지 (Wake Lock) ===================== */
+/* ===================== 방향 감지 ===================== */
+function hasHangul(t){ return /[가-힣]/.test(t); }
+function detectDir(text){ return hasHangul(text) ? 'ko2en' : 'en2ko'; }
+function effectiveDir(text){ return mode==='auto' ? detectDir(text) : mode; }
+function currentRecLang(){ return mode==='auto' ? autoRecLang : LANGS[mode].rec; }
+function updateRecLabel(){ $('#recLangLbl').textContent = currentRecLang().startsWith('ko')?'KO':'EN'; }
+
+/* 자동 모드: 감지된 언어에 맞춰 인식 언어를 점진적으로 전환 */
+function maybeAdaptAuto(d){
+  if(mode!=='auto') return;
+  const want = d==='ko2en' ? 'ko-KR' : 'en-US';
+  if(want===autoRecLang){ autoStreak={lang:null,n:0}; return; }
+  if(autoStreak.lang===want) autoStreak.n++; else autoStreak={lang:want,n:1};
+  if(autoStreak.n>=2){ switchRecLang(want); autoStreak={lang:null,n:0}; }
+}
+function switchRecLang(lang){
+  if(mode==='auto') autoRecLang=lang;
+  updateRecLabel();
+  if(recog){ recog.lang=lang; if(listening){ try{recog.stop();}catch(e){} } }
+}
+
+/* ===================== 화면 꺼짐 방지 ===================== */
 async function acquireWake(){
-  try{
-    if('wakeLock' in navigator){
-      wakeLock=await navigator.wakeLock.request('screen');
-      wakeLock.addEventListener('release',()=>setWake(false));
-      setWake(true);
-    }
-  }catch(e){ setWake(false); }
+  try{ if('wakeLock' in navigator){ wakeLock=await navigator.wakeLock.request('screen'); wakeLock.addEventListener('release',()=>setWake(false)); setWake(true); } }
+  catch(e){ setWake(false); }
 }
 function releaseWake(){ try{ wakeLock&&wakeLock.release(); }catch(e){} wakeLock=null; setWake(false); }
-function setWake(on){ $('#wakeState').textContent='화면유지 '+(on?'on':'off'); $('#wakeState').style.color=on?'var(--ok)':'var(--muted)'; }
+function setWake(on){ const el=$('#wakeState'); el.textContent='화면유지 '+(on?'on':'off'); el.style.color=on?'var(--ok)':'var(--muted)'; }
 document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible'&&wantListen&&!wakeLock) acquireWake(); });
+
+/* ===================== 원음 녹음 ===================== */
+function pickMime(){
+  const cands=['audio/webm;codecs=opus','audio/webm','audio/mp4','audio/ogg'];
+  for(const m of cands){ if(window.MediaRecorder && MediaRecorder.isTypeSupported(m)) return m; }
+  return '';
+}
+async function startAudio(){
+  if(!$('#optRec').checked) return;
+  if(!navigator.mediaDevices || !window.MediaRecorder) return;
+  try{
+    mediaStream=await navigator.mediaDevices.getUserMedia({audio:true});
+    audioMime=pickMime();
+    mediaRec=new MediaRecorder(mediaStream, audioMime?{mimeType:audioMime}:undefined);
+    audioChunks=[];
+    mediaRec.ondataavailable=e=>{ if(e.data&&e.data.size) audioChunks.push(e.data); };
+    mediaRec.onstop=()=>{
+      if(audioChunks.length){ lastAudioBlob=new Blob(audioChunks,{type:audioMime||'audio/webm'}); $('#audioBtn').disabled=false; }
+    };
+    mediaRec.start(1000);
+    recStartTs=Date.now();
+    $('#recDot').style.display='inline'; tickRec();
+    recTimer=setInterval(tickRec,1000);
+  }catch(e){
+    // 인식과 동시 사용 불가한 기기 등
+    $('#optRec').checked=false;
+    alert('원음 녹음을 시작할 수 없습니다. 이 기기는 음성인식과 동시에 마이크 녹음이 안 될 수 있습니다.\n(녹음 없이 통역·기록은 정상 작동합니다)');
+  }
+}
+function stopAudio(){
+  if(recTimer){ clearInterval(recTimer); recTimer=null; }
+  $('#recDot').style.display='none';
+  try{ if(mediaRec && mediaRec.state!=='inactive') mediaRec.stop(); }catch(e){}
+  try{ if(mediaStream) mediaStream.getTracks().forEach(t=>t.stop()); }catch(e){}
+  mediaStream=null;
+}
+function tickRec(){ const s=Math.floor((Date.now()-recStartTs)/1000); const m=Math.floor(s/60); $('#recTime').textContent=m+':'+String(s%60).padStart(2,'0'); }
+function saveAudio(){
+  if(!lastAudioBlob){ alert('저장할 녹음이 없습니다.'); return; }
+  const ext = (audioMime.indexOf('mp4')>=0)?'m4a':(audioMime.indexOf('ogg')>=0?'ogg':'webm');
+  const a=document.createElement('a'); a.href=URL.createObjectURL(lastAudioBlob);
+  a.download='회의녹음_'+ts()+'.'+ext; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),3000);
+}
 
 /* ===================== 음성 인식 ===================== */
 function supported(){ return 'webkitSpeechRecognition' in window||'SpeechRecognition' in window; }
@@ -231,14 +385,13 @@ function secureOK(){ return window.isSecureContext || location.protocol==='https
 function makeRecog(){
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   const r=new SR();
-  r.lang=LANGS[dir].rec; r.continuous=true; r.interimResults=true; r.maxAlternatives=1;
+  r.lang=currentRecLang(); r.continuous=true; r.interimResults=true; r.maxAlternatives=1;
   r.onresult=onResult;
   r.onerror=e=>{
     if(e.error==='not-allowed'||e.error==='service-not-allowed'){
       wantListen=false; setListening(false);
-      alert('마이크 권한이 거부되었습니다. 주소창 좌측 자물쇠/⋮ 메뉴 → 사이트 설정 → 마이크 허용으로 바꿔주세요.');
+      alert('마이크 권한이 거부되었습니다. 주소창 좌측 자물쇠/⋮ → 사이트 설정 → 마이크 허용으로 바꿔주세요.');
     }
-    // no-speech / aborted / network 등은 onend에서 자동 재시작
   };
   r.onend=()=>{
     listening=false;
@@ -263,25 +416,29 @@ function onResult(ev){
 
 /* ===================== 기록 ===================== */
 function nowStr(){ return new Date().toTimeString().slice(0,8); }
+function ts(){ const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')+'_'+String(d.getHours()).padStart(2,'0')+'-'+String(d.getMinutes()).padStart(2,'0'); }
 function esc(s){ return (s||'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
 async function addEntry(orig){
   $('#empty')?.remove();
+  const d=effectiveDir(orig);
+  maybeAdaptAuto(d);
   const id=Date.now()+'-'+Math.random().toString(36).slice(2,6);
-  const who=LANGS[dir].whoSrc;
-  const e={id,time:nowStr(),who,orig,trans:'',dir}; entries.push(e);
+  const who=LANGS[d].who;
+  const e={id,time:nowStr(),who,orig,trans:'',dir:d}; entries.push(e);
   const node=document.createElement('div');
-  node.className='entry '+(dir==='en2ko'?'them':'me'); node.id='e-'+id;
+  node.className='entry '+(d==='en2ko'?'them':'me'); node.id='e-'+id;
   node.innerHTML=
-    '<div class="meta"><span class="who">'+esc(who)+'</span><span>'+e.time+'</span><span>'+(dir==='en2ko'?'EN→KO':'KO→EN')+'</span></div>'+
+    '<div class="meta"><span class="who">'+esc(who)+'</span><span>'+e.time+'</span><span>'+(d==='en2ko'?'EN→KO':'KO→EN')+'</span></div>'+
     '<div class="orig">'+esc(orig)+'</div>'+
     '<div class="trans pending" id="t-'+id+'">번역 중…</div>'+
     '<div class="row-tools">'+
       '<button class="mini" data-copy="'+id+'">복사</button>'+
       '<button class="mini" data-redo="'+id+'">재번역</button>'+
+      '<button class="mini" data-flip="'+id+'">방향바꿔번역</button>'+
       '<button class="mini" data-del="'+id+'">삭제</button>'+
     '</div>';
   logEl.appendChild(node); scrollDown();
-  const tr=await translate(orig); e.trans=tr;
+  const tr=await translate(orig,d); e.trans=tr;
   const tEl=$('#t-'+id); if(tEl){ tEl.textContent=tr; tEl.classList.remove('pending'); }
 }
 function scrollDown(){ main.scrollTop=main.scrollHeight; }
@@ -314,9 +471,7 @@ function aiPrompt(){
 }
 async function copyText(t){
   try{ await navigator.clipboard.writeText(t); return true; }
-  catch(e){
-    try{ const ta=document.createElement('textarea'); ta.value=t; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); return true; }catch(_){ return false; }
-  }
+  catch(e){ try{ const ta=document.createElement('textarea'); ta.value=t; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); return true; }catch(_){ return false; } }
 }
 
 /* ===================== UI ===================== */
@@ -327,29 +482,30 @@ function setListening(on){
 }
 function start(){
   if(!supported()){ alert('이 브라우저는 음성 인식을 지원하지 않습니다.\n안드로이드는 최신 Chrome, PC는 Chrome/Edge를 사용하세요.'); return; }
-  if(!secureOK()){ alert('⚠ 마이크는 HTTPS 주소에서만 켜집니다.\n현재: '+location.protocol+'//'+location.host+'\n\n파일(file://)이나 http://로 열면 안드로이드에서 마이크가 차단됩니다. HTTPS 주소로 다시 열어주세요.'); return; }
+  if(!secureOK()){ alert('⚠ 마이크는 HTTPS 주소에서만 켜집니다.\n현재: '+location.protocol+'//'+location.host+'\nHTTPS 주소로 다시 열어주세요.'); return; }
   wantListen=true; recog=makeRecog();
   try{ recog.start(); setListening(true); }catch(e){}
   acquireWake();
+  startAudio();
 }
-function stop(){ wantListen=false; if(recog){ try{recog.stop();}catch(e){} } setListening(false); releaseWake(); }
-function setDir(d){
-  dir=d;
-  document.querySelectorAll('#dirSeg button').forEach(b=>b.classList.toggle('on',b.dataset.dir===d));
-  if(recog&&listening){ wantListen=true; try{recog.stop();}catch(e){} }
-  else if(recog){ recog.lang=LANGS[dir].rec; }
+function stop(){ wantListen=false; if(recog){ try{recog.stop();}catch(e){} } setListening(false); releaseWake(); stopAudio(); }
+function setMode(m){
+  mode=m;
+  document.querySelectorAll('#dirSeg button').forEach(b=>b.classList.toggle('on',b.dataset.mode===m));
+  if(m!=='auto') switchRecLang(LANGS[m].rec); else { switchRecLang(autoRecLang); }
+  updateRecLabel();
 }
 function setFs(v){ fsize=Math.max(12,Math.min(26,v)); document.documentElement.style.setProperty('--fs',fsize+'px'); try{localStorage.setItem('fs',fsize);}catch(e){} }
 
 $('#startBtn').onclick=start;
 $('#stopBtn').onclick=stop;
-$('#swapBtn').onclick=()=>setDir(dir==='en2ko'?'ko2en':'en2ko');
-document.querySelectorAll('#dirSeg button').forEach(b=>b.onclick=()=>setDir(b.dataset.dir));
+document.querySelectorAll('#dirSeg button').forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
 $('#fsUp').onclick=()=>setFs(fsize+2);
 $('#fsDown').onclick=()=>setFs(fsize-2);
 $('#copyBtn').onclick=async()=>{ await copyText(toPlain()); toast($('#copyBtn'),'복사됨 ✓'); };
-$('#mdBtn').onclick=()=>{ const h=meetingHeader(); download('회의록_'+h.date.replace(/[: ]/g,'-')+'.md',toMarkdown()); };
+$('#mdBtn').onclick=()=>{ download('회의록_'+ts()+'.md',toMarkdown()); };
 $('#aiBtn').onclick=async()=>{ await copyText(aiPrompt()); toast($('#aiBtn'),'복사됨 ✓'); };
+$('#audioBtn').onclick=saveAudio;
 $('#clearBtn').onclick=()=>{ if(entries.length&&!confirm('기록을 모두 지울까요?'))return; entries=[]; logEl.innerHTML=''; location.reload(); };
 $('#themeBtn').onclick=()=>{
   const cur=document.documentElement.getAttribute('data-theme');
@@ -358,24 +514,36 @@ $('#themeBtn').onclick=()=>{
   try{localStorage.setItem('theme',next||'');}catch(e){}
 };
 logEl.addEventListener('click',async e=>{
-  const c=e.target.dataset.copy,r=e.target.dataset.redo,d=e.target.dataset.del;
+  const c=e.target.dataset.copy,r=e.target.dataset.redo,f=e.target.dataset.flip,d=e.target.dataset.del;
   if(c){ const en=entries.find(x=>x.id===c); if(en){ await copyText(en.orig+'\n'+en.trans); toast(e.target,'✓'); } }
-  if(r){ const en=entries.find(x=>x.id===r); if(en){ const sv=dir; dir=en.dir; const t=await translate(en.orig); dir=sv; en.trans=t; const tn=$('#t-'+r); if(tn){tn.textContent=t;tn.classList.remove('pending');} } }
+  if(r){ const en=entries.find(x=>x.id===r); if(en){ const t=await translate(en.orig,en.dir); en.trans=t; const tn=$('#t-'+r); if(tn){tn.textContent=t;} } }
+  if(f){ const en=entries.find(x=>x.id===f); if(en){ en.dir = en.dir==='en2ko'?'ko2en':'en2ko'; const t=await translate(en.orig,en.dir); en.trans=t; const tn=$('#t-'+f); if(tn){tn.textContent=t;} } }
   if(d){ const i=entries.findIndex(x=>x.id===d); if(i>=0){ entries.splice(i,1); $('#e-'+d)?.remove(); } }
 });
 function toast(btn,msg){ const o=btn.textContent; btn.textContent=msg; setTimeout(()=>btn.textContent=o,1200); }
+
+/* 용어집 모달 */
+$('#glossBtn').onclick=()=>{ $('#glossText').value=glossary.join('\n'); $('#glossModal').classList.add('open'); };
+$('#glossCancel').onclick=()=>$('#glossModal').classList.remove('open');
+$('#glossReset').onclick=()=>{ $('#glossText').value=DEFAULT_GLOSSARY.join('\n'); };
+$('#glossSave').onclick=()=>{ const lines=$('#glossText').value.split('\n').map(x=>x.trim()).filter(Boolean); saveGlossary(lines); $('#glossModal').classList.remove('open'); toast($('#glossBtn'),'저장됨 ✓'); };
+$('#glossModal').onclick=e=>{ if(e.target.id==='glossModal') $('#glossModal').classList.remove('open'); };
+
 window.addEventListener('beforeunload',e=>{ if(entries.length){ e.preventDefault(); e.returnValue=''; } });
 
 /* 초기화 */
-try{ const t=localStorage.getItem('theme'); if(t) document.documentElement.setAttribute('data-theme',t); const f=localStorage.getItem('fs'); if(f) setFs(+f); }catch(e){}
+try{ const t=localStorage.getItem('theme'); if(t) document.documentElement.setAttribute('data-theme',t); const f=localStorage.getItem('fs'); if(f) setFs(+f); const rc=localStorage.getItem('optRec'); if(rc==='1') $('#optRec').checked=true; }catch(e){}
+$('#optRec').onchange=()=>{ try{localStorage.setItem('optRec',$('#optRec').checked?'1':'0');}catch(e){} };
+loadGlossary();
 detectEngine();
+updateRecLabel();
 if(!supported()){
   const b=document.createElement('div'); b.className='banner';
   b.innerHTML='⚠ 이 브라우저는 음성 인식(Web Speech API)을 지원하지 않습니다. <b>안드로이드 최신 Chrome</b> 또는 PC Chrome/Edge에서 열어주세요.';
   logEl.prepend(b);
 } else if(!secureOK()){
   const b=document.createElement('div'); b.className='banner';
-  b.innerHTML='⚠ 지금은 <b>'+location.protocol+'</b> 로 열렸습니다. 안드로이드에서는 <b>HTTPS 주소</b>로 열어야 마이크가 켜집니다. (file:// · http:// 는 마이크 차단)';
+  b.innerHTML='⚠ 지금은 <b>'+location.protocol+'</b> 로 열렸습니다. 안드로이드에서는 <b>HTTPS 주소</b>로 열어야 마이크가 켜집니다.';
   logEl.prepend(b);
 }
 </script>
